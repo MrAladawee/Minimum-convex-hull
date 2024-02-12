@@ -1,6 +1,6 @@
 # Minimum-convex-hull
 
-Грэхема method
+Грэхем method
 
 ## https://habr.com/ru/articles/144571/
 ## https://habr.com/ru/articles/144921/
