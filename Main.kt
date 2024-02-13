@@ -22,39 +22,49 @@ fun rotate(A : Offset, B: Offset, C: Offset): Float {
 fun grahamscan(Dataset_point : MutableList<Offset>): MutableList<Int> {
 
     var Data_size = Dataset_point.size
-    val Numeral_array = IntArray(Data_size) { it }
+    val Numeral_array = IntArray(Data_size) { it } // массив с косвенной адресацией на Dataset
+                                                   // работа будет происходить относительно Numeral_array (отрисовка)
 
-    //println(P.joinToString())
-
+    // Заполнение Numeral_array где первая точка - начало МВО
     for (i in 1..Data_size-1) {
-        
-        if (Dataset_point[Numeral_array[i]].x < Dataset_point[Numeral_array[0]].x){ // если P[i]-ая точка лежит левее P[0]-ой точки
+
+        if (Dataset_point[Numeral_array[i]].x < Dataset_point[Numeral_array[0]].x){ // если Numeral_array[i]-ая точка
+                                                                                    // лежит левее Numeral_array[0]-ой
             var temp = Numeral_array[i]
             Numeral_array[i] = Numeral_array[0]
             Numeral_array[0] = temp
         }
-        
+
     }
 
     //println(P.joinToString())
 
+    // Сортировка по степени "левизны" (rotate) без начальной точки в Numeral_array
     for (i in 2..Data_size-1) {
-        
+
         var j = i
-        while (j > 1 && rotate(Dataset_point[Numeral_array[0]], Dataset_point[Numeral_array[j - 1]], Dataset_point[Numeral_array[j]]) < 0f){
+        while (j > 1 && rotate(Dataset_point[Numeral_array[0]], Dataset_point[Numeral_array[j - 1]],
+                Dataset_point[Numeral_array[j]]) < 0f){
             var temp = Numeral_array[j]
             Numeral_array[j] = Numeral_array[j-1]
             Numeral_array[j-1] = temp
             j -= 1
         }
-        
+
     }
 
     var Numeral_array_exit = mutableListOf<Int>()
 
+    // Срезаем ненужные углы для обретения формы МВО
+    // Убираем все левые точки относительно последних двух вершин в стеке Numeral_array_exit
+    // Необходима проверка на size>2 поскольку функция начнет вызов сразу, а мы точки можем не успеть проставить > 2
     if (Numeral_array.size > 2){
-        
         Numeral_array_exit.add(Numeral_array[0]); Numeral_array_exit.add(Numeral_array[1])
+
+        // Сам срез углов
+        // Нам необходимо, чтобы все точки были левыми из-за нашего обхода (против часовой стрелки)
+        // Если вдруг какая-то точка стало правой, то мы удаляем из обхода точку, являющейся концом вектора,
+        // относительно которого образовалась правая точка
         for (i in (2..Data_size - 1)) {
             while (rotate(Dataset_point[Numeral_array_exit.getOrNull(Numeral_array_exit.size - 2) ?: error("Index out of bounds")], Dataset_point[Numeral_array_exit.getOrNull(Numeral_array_exit.size - 1) ?: error("Index out of bounds")], Dataset_point[Numeral_array[i]]) < 0f) {
                 Numeral_array_exit.removeAt(Numeral_array_exit.size - 1)
