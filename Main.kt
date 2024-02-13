@@ -21,46 +21,50 @@ fun rotate(A : Offset, B: Offset, C: Offset): Float {
 
 fun grahamscan(Dataset_point : MutableList<Offset>): MutableList<Int> {
 
-    var n = Dataset_point.size
-    val P = IntArray(n) { it }
+    var Data_size = Dataset_point.size
+    val Numeral_array = IntArray(Data_size) { it }
 
     //println(P.joinToString())
 
-    for (i in 1..n-1) {
-        if (Dataset_point[P[i]].x < Dataset_point[P[0]].x){ // если P[i]-ая точка лежит левее P[0]-ой точки
-            var temp = P[i]
-            P[i] = P[0]
-            P[0] = temp
+    for (i in 1..Data_size-1) {
+        
+        if (Dataset_point[Numeral_array[i]].x < Dataset_point[Numeral_array[0]].x){ // если P[i]-ая точка лежит левее P[0]-ой точки
+            var temp = Numeral_array[i]
+            Numeral_array[i] = Numeral_array[0]
+            Numeral_array[0] = temp
         }
+        
     }
 
     //println(P.joinToString())
 
-    for (i in 2..n-1) {
+    for (i in 2..Data_size-1) {
+        
         var j = i
-        while (j > 1 && rotate(Dataset_point[P[0]], Dataset_point[P[j - 1]], Dataset_point[P[j]]) < 0f){
-            var temp = P[j]
-            P[j] = P[j-1]
-            P[j-1] = temp
+        while (j > 1 && rotate(Dataset_point[Numeral_array[0]], Dataset_point[Numeral_array[j - 1]], Dataset_point[Numeral_array[j]]) < 0f){
+            var temp = Numeral_array[j]
+            Numeral_array[j] = Numeral_array[j-1]
+            Numeral_array[j-1] = temp
             j -= 1
         }
+        
     }
 
-    var S = mutableListOf<Int>()
+    var Numeral_array_exit = mutableListOf<Int>()
 
-    if (P.size > 2){
-        S.add(P[0]); S.add(P[1])
-
-        for (i in (2..n - 1)) {
-            while (rotate(Dataset_point[S.getOrNull(S.size - 2) ?: error("Index out of bounds")], Dataset_point[S.getOrNull(S.size - 1) ?: error("Index out of bounds")], Dataset_point[P[i]]) < 0f) {
-                S.removeAt(S.size - 1)
+    if (Numeral_array.size > 2){
+        
+        Numeral_array_exit.add(Numeral_array[0]); Numeral_array_exit.add(Numeral_array[1])
+        for (i in (2..Data_size - 1)) {
+            while (rotate(Dataset_point[Numeral_array_exit.getOrNull(Numeral_array_exit.size - 2) ?: error("Index out of bounds")], Dataset_point[Numeral_array_exit.getOrNull(Numeral_array_exit.size - 1) ?: error("Index out of bounds")], Dataset_point[Numeral_array[i]]) < 0f) {
+                Numeral_array_exit.removeAt(Numeral_array_exit.size - 1)
             }
-            S.add(P[i])
+            Numeral_array_exit.add(Numeral_array[i])
         }
-        println(S.joinToString())
+        //println(Numeral_array_exit.joinToString())
     }
-    
-    return S
+
+    return Numeral_array_exit
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
